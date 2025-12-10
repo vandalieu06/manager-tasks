@@ -44,7 +44,7 @@ function crearTarea(
     console.log("Tarea creada:", novaTarea);
 }
 
-function eliminarTareaPorTitulo(titulo: string) {
+function eliminarTarea(titulo: string) {
     const tasques = (JSON.parse(localStorage.getItem("tasques") || "[]") as tarea[]);
 
     const index = tasques.findIndex(t => t.titulo === titulo);
@@ -60,6 +60,49 @@ function eliminarTareaPorTitulo(titulo: string) {
 
     console.log("Tarea eliminada:", tareaEliminada);
 }
+
+function actualizarTarea(
+    titulo: string,
+    nuevoTitulo?: string,
+    descripcion?: string,
+    estado?: boolean,
+    fecha?: Date,
+    prioridad?: number,
+    categoria?: number
+) {
+    const tasques = (JSON.parse(localStorage.getItem("tasques") || "[]") as tarea[]);
+
+    const index = tasques.findIndex(t => t.titulo === titulo);
+
+    if (index === -1) {
+        console.error("No se encontró ninguna tarea con el título:", titulo);
+        return;
+    }
+
+    if (nuevoTitulo !== undefined) {
+        tasques[index].titulo = nuevoTitulo;
+    }
+    if (descripcion !== undefined) {
+        tasques[index].descripcion = descripcion;
+    }
+    if (estado !== undefined) {
+        tasques[index].estado = estado;
+    }
+    if (fecha !== undefined) {
+        tasques[index].fecha = fecha;
+    }
+    if (prioridad !== undefined) {
+        tasques[index].prioridad = prioridad;
+    }
+    if (categoria !== undefined) {
+        tasques[index].categoria = categoria;
+    }
+
+    localStorage.setItem("tasques", JSON.stringify(tasques));
+
+    console.log("Tarea actualizada:", tasques[index]);
+}
+
 
 function tancarSesio() {
     localStorage.removeItem("usuariActual");
