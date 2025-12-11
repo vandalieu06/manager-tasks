@@ -8,6 +8,7 @@ interface Usuari {
 
 window.onload = function(){
     const usuariActual = localStorage.getItem("usuariActual");
+    // ❌ Aquí habría que comprobar sesión/token en la base de datos o API
     if (usuariActual) {
         window.location.href = "index.html";
     }
@@ -37,6 +38,7 @@ function crearUsuario() {
     if (!password) errors.push("El camp 'Contrasenya' és obligatori.");
     else if (password.length < 6) errors.push("La contrasenya ha de tenir almenys 6 caràcters.");
 
+    // ❌ Aquí habría que obtener los usuarios de la base de datos en vez de localStorage
     const usuarisGuardats = JSON.parse(localStorage.getItem("usuarisRegistrats") || "[]") as Usuari[];
 
     const emailExisteix = usuarisGuardats.some(u => u.email === email);
@@ -44,7 +46,6 @@ function crearUsuario() {
 
     if (emailExisteix) errors.push("Ja existeix un compte amb aquest correu electrònic.");
     if (userExisteix) errors.push("Ja existeix un compte amb aquest nom d'usuari.");
-
 
     if (errors.length > 0) {
         if (error) error.innerHTML = errors.join("<br>");
@@ -59,7 +60,7 @@ function crearUsuario() {
         password
     };
 
-
+    // ❌ Aquí habría que insertar el nuevo usuario en la base de datos en vez de localStorage
     usuarisGuardats.push(nouUsuari);
     localStorage.setItem("usuarisRegistrats", JSON.stringify(usuarisGuardats));
 
