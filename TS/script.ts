@@ -7,6 +7,8 @@ interface tarea {
     categoria: number;
 }
 
+
+//Comprueba login 
 window.onload = function () {
     const usuariActual = localStorage.getItem("usuariActual");
     if (!usuariActual) {
@@ -19,6 +21,7 @@ window.onload = function () {
     console.log(tasques);
 }
 
+//Crear tarea 
 function crearTarea(
     titulo: string,
     descripcion?: string,
@@ -44,6 +47,8 @@ function crearTarea(
     console.log("Tarea creada:", novaTarea);
 }
 
+
+//Eliminar tarea 
 function eliminarTarea(titulo: string) {
     const tasques = (JSON.parse(localStorage.getItem("tasques") || "[]") as tarea[]);
 
@@ -61,6 +66,9 @@ function eliminarTarea(titulo: string) {
     console.log("Tarea eliminada:", tareaEliminada);
 }
 
+
+
+//Actualizar tarea 
 function actualizarTarea(
     titulo: string,
     nuevoTitulo?: string,
@@ -104,6 +112,8 @@ function actualizarTarea(
 }
 
 
+
+//Cerrar sesion
 function tancarSesio() {
     localStorage.removeItem("usuariActual");
     window.location.href = "login.html";
