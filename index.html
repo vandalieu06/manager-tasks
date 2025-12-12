@@ -1,304 +1,261 @@
 <!DOCTYPE html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0" />
-		<title>TaskGener - Dashboard</title>
 
-		<!-- Tailwind CSS -->
-		<script src="https://cdn.tailwindcss.com"></script>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>TaskGener - Dashboard</title>
 
-		<!-- Google Fonts - Inter -->
-		<link
-			rel="preconnect"
-			href="https://fonts.googleapis.com" />
-		<link
-			rel="preconnect"
-			href="https://fonts.gstatic.com"
-			crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
-			rel="stylesheet" />
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
 
-		<!-- Font Awesome -->
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-			integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-			crossorigin="anonymous"
-			referrerpolicy="no-referrer" />
+	<!-- Google Fonts - Inter -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
-		<!-- Configuración de Tailwind -->
-		<script>
-			tailwind.config = {
-				theme: {
-					extend: {
-						colors: {
-							primary: {
-								DEFAULT: "#6d5dfb",
-								dark: "#362c77",
-							},
-							neutral: {
-								light: "#f7f7fb",
-								medium: "#d4d4e0",
-								dark: "#1f1f29",
-							},
-							warning: "#ffca65",
-							success: "#32d18a",
-							"pink-bg": "#ffc9c9", // Fondo rosa del dashboard
-							"pink-light": "#ffd9d9", // Rosa claro para cards
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+		integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<!-- Configuración de Tailwind -->
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						primary: {
+							DEFAULT: "#6d5dfb",
+							dark: "#362c77",
 						},
-						fontFamily: {
-							sans: ["Inter", "sans-serif"],
+						neutral: {
+							light: "#f7f7fb",
+							medium: "#d4d4e0",
+							dark: "#1f1f29",
 						},
+						warning: "#ffca65",
+						success: "#32d18a",
+						"pink-bg": "#ffc9c9", // Fondo rosa del dashboard
+						"pink-light": "#ffd9d9", // Rosa claro para cards
+					},
+					fontFamily: {
+						sans: ["Inter", "sans-serif"],
 					},
 				},
-			};
-		</script>
+			},
+		};
+	</script>
 
-		<script
-			src="./dist/script.js"
-			defer></script>
-	</head>
+	<script src="./dist/script.js" defer></script>
+</head>
 
-	<body class="bg-white font-sans min-h-screen p-6">
-		<div
-			class="flex gap-4 h-full max-w-[1440px] mx-auto min-h-[calc(100vh-48px)]">
-			<!-- Sidebar Izquierdo -->
-			<aside
-				class="w-[200px] border-2 border-black rounded p-4 flex flex-col gap-4 shrink-0 bg-white">
-				<!-- Logo Escuela -->
-				<div
-					class="bg-white flex items-center justify-center h-[130px] overflow-hidden border-b border-gray-300">
-					<img
-						src="./src/assets/logoJV.png"
-						alt="Logo Jaume Viladoms Centre Educatiu"
-						class="max-w-full max-h-full object-contain" />
+<body class="bg-white font-sans min-h-screen p-6">
+	<div class="flex gap-4 h-full max-w-[1440px] mx-auto min-h-[calc(100vh-48px)]">
+		<!-- Sidebar Izquierdo -->
+		<aside class="w-[200px] border-2 border-black rounded p-4 flex flex-col gap-4 shrink-0 bg-white">
+			<!-- Logo Escuela -->
+			<div class="bg-white flex items-center justify-center h-[130px] overflow-hidden border-b border-gray-300">
+				<img src="./src/assets/logoJV.png" alt="Logo Jaume Viladoms Centre Educatiu"
+					class="max-w-full max-h-full object-contain" />
+			</div>
+
+			<!-- Navegación -->
+			<nav class="flex flex-col gap-2">
+				<!-- Dashboard -->
+				<label
+					class="bg-white border border-gray-400 rounded p-3 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
+					<input type="checkbox"
+						class="w-4 h-4 border-2 border-gray-600 rounded-sm cursor-pointer accent-primary" />
+					<span class="text-neutral-dark text-sm font-normal">Dashboard</span>
+				</label>
+
+				<!-- Todas las tareas -->
+				<label
+					class="bg-white border border-gray-400 rounded p-3 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
+					<input type="checkbox"
+						class="w-4 h-4 border-2 border-gray-600 rounded-sm cursor-pointer accent-primary" />
+					<span class="text-neutral-dark text-sm font-normal">Todas las tareas</span>
+				</label>
+
+				<!-- Crear tarea -->
+				<label onclick="abrirModal()"
+					class="bg-white border border-gray-400 rounded p-3 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
+					<i class="fas fa-plus text-primary text-base"></i>
+					<span class="text-neutral-dark text-sm font-normal">Crear tarea</span>
+				</label>
+			</nav>
+
+			<!-- Separador -->
+			<div class="border-t border-gray-300 my-2"></div>
+
+			<!-- Estadísticas -->
+			<div class="flex flex-col gap-2">
+				<div class="bg-gray-50 rounded p-3">
+					<p class="text-gray-600 text-xs font-normal mb-1">Tareas totales</p>
+					<p class="text-primary-dark text-base font-semibold">24</p>
 				</div>
 
-				<!-- Navegación -->
-				<nav class="flex flex-col gap-2">
-					<!-- Dashboard -->
-					<label
-						class="bg-white border border-gray-400 rounded p-3 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
-						<input
-							type="checkbox"
-							class="w-4 h-4 border-2 border-gray-600 rounded-sm cursor-pointer accent-primary" />
-						<span class="text-neutral-dark text-sm font-normal">Dashboard</span>
-					</label>
-
-					<!-- Todas las tareas -->
-					<label
-						class="bg-white border border-gray-400 rounded p-3 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
-						<input
-							type="checkbox"
-							class="w-4 h-4 border-2 border-gray-600 rounded-sm cursor-pointer accent-primary" />
-						<span class="text-neutral-dark text-sm font-normal"
-							>Todas las tareas</span
-						>
-					</label>
-
-					<!-- Crear tarea -->
-					<label
-						class="bg-white border border-gray-400 rounded p-3 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
-						<i class="fas fa-plus text-primary text-base"></i>
-						<span class="text-neutral-dark text-sm font-normal"
-							>Crear tarea</span
-						>
-					</label>
-				</nav>
-
-				<!-- Separador -->
-				<div class="border-t border-gray-300 my-2"></div>
-
-				<!-- Estadísticas -->
-				<div class="flex flex-col gap-2">
-					<div class="bg-gray-50 rounded p-3">
-						<p class="text-gray-600 text-xs font-normal mb-1">Tareas totales</p>
-						<p class="text-primary-dark text-base font-semibold">24</p>
-					</div>
-
-					<div class="bg-gray-50 rounded p-3">
-						<p class="text-gray-600 text-xs font-normal mb-1">Completadas</p>
-						<p class="text-primary-dark text-base font-semibold">12</p>
-					</div>
+				<div class="bg-gray-50 rounded p-3">
+					<p class="text-gray-600 text-xs font-normal mb-1">Completadas</p>
+					<p class="text-primary-dark text-base font-semibold">12</p>
 				</div>
-			</aside>
+			</div>
+		</aside>
 
-			<!-- Contenido Principal -->
-			<main
-				class="flex-1 border-2 border-neutral-dark rounded p-4 flex flex-col gap-4 overflow-hidden bg-white">
-				<!-- Header del Dashboard -->
-				<header
-					class="bg-gray-100 p-4 flex items-center justify-between rounded">
-					<div class="flex flex-col gap-1">
-						<h1 class="text-primary-dark text-[28px] font-bold leading-tight">
-							Dashboard
-						</h1>
-						<p class="text-primary-dark text-base font-normal leading-tight">
-							Revisa tus tareas
-						</p>
-					</div>
-					<button
-						class="bg-primary text-white px-4 py-2 rounded text-sm font-semibold hover:bg-primary-dark transition-colors">
-						Opciones
-					</button>
-				</header>
-
-				<!-- Estadísticas Cards -->
-				<div class="grid grid-cols-3 gap-3">
-					<div class="bg-gray-200 rounded p-4 flex flex-col gap-1">
-						<p class="text-primary-dark text-[32px] font-bold leading-none">
-							24
-						</p>
-						<p class="text-primary-dark text-xs font-normal">Tareas totales</p>
-					</div>
-					<div class="bg-gray-200 rounded p-4 flex flex-col gap-1">
-						<p class="text-primary-dark text-[32px] font-bold leading-none">
-							8
-						</p>
-						<p class="text-primary-dark text-xs font-normal">
-							tareas en camino
-						</p>
-					</div>
-					<div class="bg-gray-200 rounded p-4 flex flex-col gap-1">
-						<p class="text-primary-dark text-[32px] font-bold leading-none">
-							12
-						</p>
-						<p class="text-primary-dark text-xs font-normal">
-							Tareas Completadas
-						</p>
-					</div>
+		<!-- Contenido Principal -->
+		<main class="flex-1 border-2 border-neutral-dark rounded p-4 flex flex-col gap-4 overflow-hidden bg-white">
+			<!-- Header del Dashboard -->
+			<header class="bg-gray-100 p-4 flex items-center justify-between rounded">
+				<div class="flex flex-col gap-1">
+					<h1 class="text-primary-dark text-[28px] font-bold leading-tight">
+						Dashboard
+					</h1>
+					<p class="text-primary-dark text-base font-normal leading-tight">
+						Revisa tus tareas
+					</p>
 				</div>
-
-				<!-- Botón Crear Tarea -->
 				<button
-					class="bg-primary border-2 border-primary rounded-lg p-4 w-full text-white text-xl font-extrabold text-center hover:bg-primary-dark hover:border-primary-dark transition-colors">
-					Crear Tarea
+					class="bg-primary text-white px-4 py-2 rounded text-sm font-semibold hover:bg-primary-dark transition-colors">
+					Opciones
 				</button>
+			</header>
 
-				<!-- Tareas Recientes -->
-				<section class="flex-1 bg-white flex flex-col gap-3 overflow-auto">
-					<!-- Header de Tareas Recientes -->
-					<div
-						class="border-b-2 border-primary-dark pb-2 flex items-center justify-between">
-						<h2 class="text-primary-dark text-sm font-normal">
-							Tareas recientes
-						</h2>
-						<button
-							class="bg-primary text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-primary-dark transition-colors">
-							Ver todas
-						</button>
+			<!-- Estadísticas Cards -->
+			<div class="grid grid-cols-3 gap-3">
+				<div class="bg-gray-200 rounded p-4 flex flex-col gap-1">
+					<p class="text-primary-dark text-[32px] font-bold leading-none">
+						24
+					</p>
+					<p class="text-primary-dark text-xs font-normal">Tareas totales</p>
+				</div>
+				<div class="bg-gray-200 rounded p-4 flex flex-col gap-1">
+					<p class="text-primary-dark text-[32px] font-bold leading-none">
+						8
+					</p>
+					<p class="text-primary-dark text-xs font-normal">
+						tareas en camino
+					</p>
+				</div>
+				<div class="bg-gray-200 rounded p-4 flex flex-col gap-1">
+					<p class="text-primary-dark text-[32px] font-bold leading-none">
+						12
+					</p>
+					<p class="text-primary-dark text-xs font-normal">
+						Tareas Completadas
+					</p>
+				</div>
+			</div>
+
+			<!-- Botón Crear Tarea -->
+			<button onclick="abrirModal()"
+				class="bg-primary border-2 border-primary rounded-lg p-4 w-full text-white text-xl font-extrabold text-center hover:bg-primary-dark hover:border-primary-dark transition-colors">
+				Crear Tarea
+			</button>
+
+			<!-- Tareas Recientes -->
+			<section class="flex-1 bg-white flex flex-col gap-3 overflow-auto">
+				<!-- Header de Tareas Recientes -->
+				<div class="border-b-2 border-primary-dark pb-2 flex items-center justify-between">
+					<h2 class="text-primary-dark text-sm font-normal">
+						Tareas recientes
+					</h2>
+					<button
+						class="bg-primary text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-primary-dark transition-colors">
+						Ver todas
+					</button>
+				</div>
+
+				<!-- Tarea 1 -->
+				<article
+					class="border-2 border-primary-dark rounded p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
+					<div class="flex flex-col gap-2 flex-1">
+						<h3 class="text-primary-dark text-lg font-bold leading-tight">
+							Finaliza el componente de React
+						</h3>
+						<p class="text-primary-dark text-sm font-normal leading-tight">
+							Construye un componente rehusable
+						</p>
+						<div class="flex gap-2 items-center flex-wrap">
+							<!-- Tag Frontend -->
+							<div class="flex items-center gap-1.5">
+								<i class="fas fa-tag text-[#1f1f29] text-base"></i>
+								<span class="text-neutral-dark text-xs font-normal">Frontend</span>
+							</div>
+							<!-- Tag Prioridad Alta -->
+							<div class="flex items-center gap-1.5">
+								<i class="fas fa-tag text-[#ff6b6b] text-base"></i>
+								<span class="text-neutral-dark text-xs font-normal">Prioridad: Alta</span>
+							</div>
+							<!-- Tag React, forms -->
+							<div class="flex items-center gap-1.5">
+								<i class="fas fa-tag text-[#6d5dfb] text-base"></i>
+								<span class="text-neutral-dark text-xs font-normal">React, forms</span>
+							</div>
+						</div>
 					</div>
+					<span class="bg-warning px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
+						Pendiente
+					</span>
+				</article>
 
-					<!-- Tarea 1 -->
-					<article
-						class="border-2 border-primary-dark rounded p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
-						<div class="flex flex-col gap-2 flex-1">
-							<h3 class="text-primary-dark text-lg font-bold leading-tight">
-								Finaliza el componente de React
-							</h3>
-							<p class="text-primary-dark text-sm font-normal leading-tight">
-								Construye un componente rehusable
-							</p>
-							<div class="flex gap-2 items-center flex-wrap">
-								<!-- Tag Frontend -->
-								<div class="flex items-center gap-1.5">
-									<i class="fas fa-tag text-[#1f1f29] text-base"></i>
-									<span class="text-neutral-dark text-xs font-normal"
-										>Frontend</span
-									>
-								</div>
-								<!-- Tag Prioridad Alta -->
-								<div class="flex items-center gap-1.5">
-									<i class="fas fa-tag text-[#ff6b6b] text-base"></i>
-									<span class="text-neutral-dark text-xs font-normal"
-										>Prioridad: Alta</span
-									>
-								</div>
-								<!-- Tag React, forms -->
-								<div class="flex items-center gap-1.5">
-									<i class="fas fa-tag text-[#6d5dfb] text-base"></i>
-									<span class="text-neutral-dark text-xs font-normal"
-										>React, forms</span
-									>
-								</div>
+				<!-- Tarea 2 -->
+				<article
+					class="border-2 border-primary-dark rounded p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
+					<div class="flex flex-col gap-2 flex-1">
+						<h3 class="text-primary-dark text-lg font-bold leading-tight">
+							Base de datos
+						</h3>
+						<p class="text-primary-dark text-sm font-normal leading-tight">
+							Diseña una base de datos simple
+						</p>
+						<div class="flex gap-2 items-center flex-wrap">
+							<!-- Tag Backend -->
+							<div class="flex items-center gap-1.5">
+								<i class="fas fa-tag text-[#1f1f29] text-base"></i>
+								<span class="text-neutral-dark text-xs font-normal">Backend</span>
+							</div>
+							<!-- Tag Prioridad Alta -->
+							<div class="flex items-center gap-1.5">
+								<i class="fas fa-tag text-[#ff6b6b] text-base"></i>
+								<span class="text-neutral-dark text-xs font-normal">Prioridad: Alta</span>
+							</div>
+							<!-- Tag SQL, Database -->
+							<div class="flex items-center gap-1.5">
+								<i class="fas fa-tag text-[#6d5dfb] text-base"></i>
+								<span class="text-neutral-dark text-xs font-normal">SQL, Database</span>
 							</div>
 						</div>
-						<span
-							class="bg-warning px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
-							Pendiente
-						</span>
-					</article>
+					</div>
+					<span class="bg-warning px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
+						Pendiente
+					</span>
+				</article>
 
-					<!-- Tarea 2 -->
-					<article
-						class="border-2 border-primary-dark rounded p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
-						<div class="flex flex-col gap-2 flex-1">
-							<h3 class="text-primary-dark text-lg font-bold leading-tight">
-								Base de datos
-							</h3>
-							<p class="text-primary-dark text-sm font-normal leading-tight">
-								Diseña una base de datos simple
-							</p>
-							<div class="flex gap-2 items-center flex-wrap">
-								<!-- Tag Backend -->
-								<div class="flex items-center gap-1.5">
-									<i class="fas fa-tag text-[#1f1f29] text-base"></i>
-									<span class="text-neutral-dark text-xs font-normal"
-										>Backend</span
-									>
-								</div>
-								<!-- Tag Prioridad Alta -->
-								<div class="flex items-center gap-1.5">
-									<i class="fas fa-tag text-[#ff6b6b] text-base"></i>
-									<span class="text-neutral-dark text-xs font-normal"
-										>Prioridad: Alta</span
-									>
-								</div>
-								<!-- Tag SQL, Database -->
-								<div class="flex items-center gap-1.5">
-									<i class="fas fa-tag text-[#6d5dfb] text-base"></i>
-									<span class="text-neutral-dark text-xs font-normal"
-										>SQL, Database</span
-									>
-								</div>
-							</div>
-						</div>
-						<span
-							class="bg-warning px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
-							Pendiente
-						</span>
-					</article>
+				<!-- Tarea 3 -->
+				<article
+					class="border-2 border-primary-dark rounded p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
+					<div class="flex flex-col gap-2 flex-1">
+						<h3 class="text-primary-dark text-lg font-bold leading-tight">
+							Lee los documentos de Git
+						</h3>
+						<p class="text-primary-dark text-sm font-normal leading-tight">
+							Analiza los documentos de Git
+						</p>
+					</div>
+					<span class="bg-success px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
+						Completado
+					</span>
+				</article>
+			</section>
+		</main>
+	</div>
 
-					<!-- Tarea 3 -->
-					<article
-						class="border-2 border-primary-dark rounded p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
-						<div class="flex flex-col gap-2 flex-1">
-							<h3 class="text-primary-dark text-lg font-bold leading-tight">
-								Lee los documentos de Git
-							</h3>
-							<p class="text-primary-dark text-sm font-normal leading-tight">
-								Analiza los documentos de Git
-							</p>
-						</div>
-						<span
-							class="bg-success px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
-							Completado
-						</span>
-					</article>
-				</section>
-			</main>
-		</div>
+	<!-- Botón de cerrar sesión (flotante) -->
+	<button id="logoutBtn" onclick="tancarSesio()"
+		class="fixed bottom-6 right-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition-colors">
+		Tancar Sessió
+	</button>
+</body>
 
-		<!-- Botón de cerrar sesión (flotante) -->
-		<button
-			id="logoutBtn"
-			onclick="tancarSesio()"
-			class="fixed bottom-6 right-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition-colors">
-			Tancar Sessió
-		</button>
-	</body>
 </html>

@@ -1,6 +1,7 @@
 "use strict";
 window.onload = function () {
     const usuariActual = localStorage.getItem("usuariActual");
+    // ❌ Aquí habría que comprobar sesión/token en la base de datos o API
     if (usuariActual) {
         window.location.href = "index.html";
     }
@@ -30,6 +31,7 @@ function crearUsuario() {
         errors.push("El camp 'Contrasenya' és obligatori.");
     else if (password.length < 6)
         errors.push("La contrasenya ha de tenir almenys 6 caràcters.");
+    // ❌ Aquí habría que obtener los usuarios de la base de datos en vez de localStorage
     const usuarisGuardats = JSON.parse(localStorage.getItem("usuarisRegistrats") || "[]");
     const emailExisteix = usuarisGuardats.some(u => u.email === email);
     const userExisteix = usuarisGuardats.some(u => u.username === username);
@@ -49,6 +51,7 @@ function crearUsuario() {
         username,
         password
     };
+    // ❌ Aquí habría que insertar el nuevo usuario en la base de datos en vez de localStorage
     usuarisGuardats.push(nouUsuari);
     localStorage.setItem("usuarisRegistrats", JSON.stringify(usuarisGuardats));
     if (creado) {
