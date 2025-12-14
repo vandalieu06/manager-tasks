@@ -264,7 +264,7 @@ manager-tasks/
 
 Los archivos `.ts` se compilan a JavaScript en la carpeta `dist/`:
 
-```
+```Bash
 TS/script.ts   → dist/script.js
 TS/login.ts    → dist/login.js
 TS/signup.ts   → dist/signup.js
