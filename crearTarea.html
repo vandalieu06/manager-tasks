@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>TaskGener - Crear Nueva Tarea</title>
+
+		<!-- Tailwind CSS -->
+		<script src="https://cdn.tailwindcss.com"></script>
+
+		<!-- Google Fonts - Inter -->
+		<link
+			rel="preconnect"
+			href="https://fonts.googleapis.com" />
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+			rel="stylesheet" />
+
+		<!-- Font Awesome -->
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+			integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer" />
+
+		<!-- Configuración de Tailwind -->
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							primary: {
+								DEFAULT: "#6d5dfb",
+								dark: "#362c77",
+							},
+							neutral: {
+								light: "#f7f7fb",
+								medium: "#d4d4e0",
+								dark: "#1f1f29",
+							},
+							warning: "#ffca65",
+							success: "#32d18a",
+						},
+						fontFamily: {
+							sans: ["Inter", "sans-serif"],
+						},
+					},
+				},
+			};
+		</script>
+
+		<!-- Simular sesión para desarrollo -->
+		<script>
+			// Establecer usuario en localStorage para pruebas
+			if (!localStorage.getItem("usuariActual")) {
+				localStorage.setItem("usuariActual", "usuario_prueba");
+			}
+		</script>
+
+		<script
+			src="./dist/script.js"
+			defer></script>
+	</head>
+
+	<body class="bg-white font-sans min-h-screen p-6">
+		<div
+			class="flex gap-[17px] h-full max-w-[1440px] mx-auto min-h-[calc(100vh-48px)]">
+			<!-- Sidebar Izquierdo -->
+			<aside
+				class="w-[335px] border-2 border-black rounded p-4 flex flex-col gap-4 shrink-0 bg-white">
+				<!-- Logo Escuela -->
+				<div
+					class="bg-white flex items-center justify-center h-[162px] overflow-hidden px-4 py-2">
+					<img
+						src="./src/assets/logoJV.png"
+						alt="Logo Jaume Viladoms Centre Educatiu"
+						class="max-w-full max-h-full object-contain" />
+				</div>
+
+				<!-- Navegación -->
+				<nav class="flex flex-col gap-2">
+					<!-- Dashboard -->
+					<label
+						class="bg-neutral-light border border-neutral-dark rounded p-4 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
+						<input
+							type="checkbox"
+							class="w-[16px] h-[16px] border-2 border-gray-600 rounded-sm cursor-pointer accent-primary" />
+						<span class="text-neutral-dark text-base font-normal"
+							>Dashboard</span
+						>
+					</label>
+
+					<!-- Todas las tareas -->
+					<label
+						class="bg-neutral-light border border-neutral-dark rounded p-4 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
+						<input
+							type="checkbox"
+							class="w-[16px] h-[16px] border-2 border-gray-600 rounded-sm cursor-pointer accent-primary" />
+						<span class="text-neutral-dark text-base font-normal"
+							>Todas las tareas</span
+						>
+					</label>
+
+					<!-- Crear tarea -->
+					<label
+						class="bg-neutral-light border border-neutral-dark rounded p-4 flex items-center gap-3 w-full cursor-pointer hover:bg-gray-50 transition-colors">
+						<i class="fas fa-plus text-primary text-base"></i>
+						<span class="text-neutral-dark text-base font-normal"
+							>Crear tarea</span
+						>
+					</label>
+				</nav>
+
+				<!-- Separador -->
+				<div class="border-t border-gray-300 my-2"></div>
+
+				<!-- Estadísticas -->
+				<div class="flex flex-col gap-4">
+					<div class="bg-neutral-light rounded p-4">
+						<p class="text-neutral-dark text-base font-normal mb-2">
+							Tareas totales
+						</p>
+						<p class="text-primary-dark text-base font-normal">24</p>
+					</div>
+
+					<div class="bg-neutral-light rounded p-4">
+						<p class="text-neutral-dark text-base font-normal mb-2">
+							Completadas
+						</p>
+						<p class="text-primary-dark text-base font-normal">12</p>
+					</div>
+				</div>
+			</aside>
+
+			<!-- Formulario de Crear Tarea -->
+			<main
+				class="flex-1 border-2 border-neutral-dark rounded p-4 flex flex-col gap-4 bg-white overflow-y-auto">
+				<!-- Encabezado -->
+				<div class="bg-neutral-light p-4 rounded">
+					<h1 class="text-primary-dark text-[40px] font-bold leading-normal">
+						Crear nueva tarea
+					</h1>
+					<p class="text-primary-dark text-[32px] font-normal leading-normal">
+						Llena los campos para la nueva tarea
+					</p>
+				</div>
+
+				<!-- Línea separadora -->
+				<div class="border-t-4 border-primary-dark"></div>
+
+				<!-- Formulario -->
+				<form class="flex flex-col gap-4">
+					<!-- Nombre de la tarea -->
+					<div class="flex flex-col gap-4 w-[551px]">
+						<label class="text-primary text-base font-extrabold"
+							>Nombre de la tarea</label
+						>
+						<input
+							type="text"
+							placeholder="Nombre"
+							class="bg-neutral-light border border-primary-dark rounded-lg h-[66px] px-4 py-2 text-neutral-medium text-base font-extrabold placeholder-neutral-medium focus:outline-none focus:ring-2 focus:ring-primary" />
+					</div>
+
+					<!-- Descripción -->
+					<div class="flex flex-col gap-4 w-[551px]">
+						<label class="text-primary text-base font-extrabold"
+							>Descripción</label
+						>
+						<textarea
+							placeholder="Describe la tarea aquí...."
+							class="bg-neutral-light border border-primary-dark rounded-lg h-[231px] p-4 text-neutral-medium text-base font-extrabold placeholder-neutral-medium resize-none focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+					</div>
+
+					<!-- Categoría -->
+					<div class="flex flex-col gap-2 w-full">
+						<div class="flex items-center justify-center p-4">
+							<h3 class="text-primary-dark text-2xl font-semibold">
+								Categoria
+							</h3>
+						</div>
+						<div class="grid grid-cols-5 gap-4 w-full">
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Frontend
+							</button>
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Backend
+							</button>
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Database
+							</button>
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Learning
+							</button>
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Añadir otra...
+							</button>
+						</div>
+					</div>
+
+					<!-- Prioridad -->
+					<div class="flex flex-col gap-2 w-full">
+						<div class="flex items-center justify-center p-4">
+							<h3 class="text-primary-dark text-2xl font-semibold">
+								Prioridad
+							</h3>
+						</div>
+						<div class="grid grid-cols-3 gap-4 w-full">
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Alta
+							</button>
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Media
+							</button>
+							<button
+								type="button"
+								class="bg-neutral-light border-2 border-primary rounded h-[124px] p-4 text-primary-dark text-base font-semibold flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+								Baja
+							</button>
+						</div>
+					</div>
+
+					<!-- Tags -->
+					<div class="flex flex-col gap-4 w-[551px]">
+						<label class="text-primary text-base font-extrabold">Tags</label>
+						<input
+							type="text"
+							placeholder="Con la coma separas las categorias"
+							class="bg-neutral-light border border-primary-dark rounded-lg h-[66px] px-4 py-2 text-neutral-medium text-base font-extrabold placeholder-neutral-medium focus:outline-none focus:ring-2 focus:ring-primary" />
+					</div>
+
+					<!-- Fecha de entrega -->
+					<div class="flex flex-col gap-4 w-[551px]">
+						<label class="text-primary text-base font-extrabold"
+							>Fecha de entrega</label
+						>
+						<input
+							type="text"
+							placeholder="dd/mm/yyyy"
+							class="bg-neutral-light border border-primary-dark rounded-lg h-[66px] px-4 py-2 text-neutral-medium text-base font-extrabold placeholder-neutral-medium focus:outline-none focus:ring-2 focus:ring-primary" />
+					</div>
+
+					<!-- Botones de acción -->
+					<div class="flex gap-4 items-center mt-4">
+						<button
+							type="submit"
+							class="bg-primary px-4 py-2 rounded text-neutral-light text-2xl font-semibold hover:bg-primary-dark transition-colors">
+							Crear nueva tarea
+						</button>
+						<button
+							type="button"
+							class="border-2 border-primary px-4 py-2 rounded text-primary-dark text-2xl font-semibold hover:bg-primary hover:text-white transition-colors"
+							onclick="window.history.back()">
+							Cancelar
+						</button>
+					</div>
+				</form>
+			</main>
+		</div>
+
+		<!-- Botón de cerrar sesión (flotante) -->
+		<button
+			id="logoutBtn"
+			onclick="tancarSesio()"
+			class="fixed bottom-6 right-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition-colors">
+			Tancar Sessió
+		</button>
+	</body>
+</html>
