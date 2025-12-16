@@ -256,5 +256,5 @@ function actualizarTarea(
 
 function tancarSesio() {
 	localStorage.removeItem("usuariActual");
-	window.location.href = "login.html";
+	window.location.href = "./pages/login.html";
 }

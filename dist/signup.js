@@ -2,7 +2,7 @@
 window.onload = () => {
     const usuariActual = localStorage.getItem("usuariActual");
     if (usuariActual) {
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
     }
     console.log("hola mundo");
 };
@@ -43,8 +43,12 @@ function crearUsuario() {
     if (userExisteix)
         errors.push("Ja existeix un compte amb aquest nom d'usuari.");
     if (errors.length > 0) {
-        if (error)
+        if (error) {
             error.innerHTML = errors.join("<br>");
+            error.classList.remove("hidden");
+        }
+        if (creado)
+            creado.classList.add("hidden");
         return;
     }
     const nouUsuari = {
@@ -58,11 +62,11 @@ function crearUsuario() {
     localStorage.setItem("usuarisRegistrats", JSON.stringify(usuarisGuardats));
     if (creado) {
         creado.innerHTML = `
-            Compte creada amb èxit!<br><br>
-            <button type="button" onclick="window.location.href='login.html'">
-                Iniciar Sessió
-            </button>`;
+		Compte creada amb èxit!`;
+        creado.classList.remove("hidden");
     }
+    if (error)
+        error.classList.add("hidden");
 }
 const btnCreateUser = document.querySelector(".btn-create-user");
 btnCreateUser === null || btnCreateUser === void 0 ? void 0 : btnCreateUser.addEventListener("click", crearUsuario);

@@ -177,5 +177,5 @@ function actualizarTarea(titulo, nuevoTitulo, descripcion, estado, fecha, priori
 }
 function tancarSesio() {
     localStorage.removeItem("usuariActual");
-    window.location.href = "login.html";
+    window.location.href = "./pages/login.html";
 }
