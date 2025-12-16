@@ -79,6 +79,7 @@ function crearUsuario() {
 		creado.innerHTML = `
 		Compte creada amb èxit!`;
 		creado.classList.remove("hidden");
+		window.location.href = "../index.html"
 	}
 
 	if (error) error.classList.add("hidden");

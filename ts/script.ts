@@ -254,6 +254,43 @@ function actualizarTarea(
 	console.log("Tarea actualizada:", tasques[index]);
 }
 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const chkDashboard = document.getElementById("chkDashboard");
+  const chkTodas = document.getElementById("chkTodas");
+  const mainContent = document.getElementById("mainContent");
+
+  // Guardamos el HTML original del dashboard
+  const dashboardHTML = mainContent.innerHTML;
+
+  chkDashboard.checked = true;
+
+  chkDashboard.addEventListener("change", () => {
+    if (chkDashboard.checked) {
+      chkTodas.checked = false;
+      mainContent.innerHTML = dashboardHTML;
+    }
+  });
+
+  chkTodas.addEventListener("change", () => {
+    if (chkTodas.checked) {
+      chkDashboard.checked = false;
+
+      fetch("./pages/todasLasTareas.html")
+        .then((res) => res.text())
+        .then((html) => {
+          mainContent.innerHTML = html;
+        })
+        .catch((err) => {
+          mainContent.innerHTML =
+            "<p class='text-red-500'>Error cargando las tareas</p>";
+          console.error(err);
+        });
+    }
+  });
+});
+
+
 function tancarSesio() {
 	localStorage.removeItem("usuariActual");
 	window.location.href = "./pages/login.html";
