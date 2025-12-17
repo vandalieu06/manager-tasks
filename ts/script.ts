@@ -2,30 +2,45 @@ interface Tarea {
 	titulo: string;
 	descripcion?: string;
 	categoria: string;
-	estado: number;
+	estado: number; // 1: Pendiente, 2: En progreso, 3: Completado
 	fecha?: Date;
-	prioridad: number;
+	prioridad: number; // 1: Baja, 2: Media, 3: Alta
 	etiquetas: string[];
 }
-let tasques: Tarea[] = [];
 
+// Función para obtener todas las tareas
+function obtenerTareas(): Tarea[] {
+	const tasquesRaw = localStorage.getItem("tasques");
+	if (!tasquesRaw) return [];
+
+	try {
+		const tasques = JSON.parse(tasquesRaw) as Tarea[];
+		return tasques.map((t) => ({
+			...t,
+			fecha: t.fecha ? new Date(t.fecha) : undefined,
+		}));
+	} catch (error) {
+		console.error("Error al parsear tareas:", error);
+		return [];
+	}
+}
+
+// Función para guardar tareas
+function guardarTareas(tareas: Tarea[]): void {
+	localStorage.setItem("tasques", JSON.stringify(tareas));
+}
+
+// Función para crear tarea
 function crearTarea(
 	titulo: string,
-	descripcion?: string,
+	descripcion: string = "",
 	categoria: string,
 	estado: number = 1,
-	fecha?: Date,
+	fecha: Date | undefined = undefined,
 	prioridad: number = 1,
 	etiquetas: string[] = [],
-) {
-	const tasquesRaw = JSON.parse(localStorage.getItem("tasques") | []);
-	if (tasquesRaw.length > 1) {
-		tasques = tasquesRaw;
-	}
-
-	if (tasquesRaw) {
-		tasques = JSON.parse(tasquesRaw) as Tarea[];
-	}
+): void {
+	const tasques = obtenerTareas();
 
 	const novaTarea: Tarea = {
 		titulo,
@@ -38,23 +53,13 @@ function crearTarea(
 	};
 
 	tasques.push(novaTarea);
-	localStorage.setItem("tasques", JSON.stringify(tasques));
+	guardarTareas(tasques);
 }
 
-function eliminarTarea(titulo: string) {
-	const tasquesRaw = localStorage.getItem("tasques");
-	let tasques: Tarea[] = [];
-	if (tasquesRaw) {
-		tasques = JSON.parse(tasquesRaw) as Tarea[];
-	}
-
-	let index = -1;
-	for (let i = 0; i < tasques.length; i++) {
-		if (tasques[i].titulo === titulo) {
-			index = i;
-			break;
-		}
-	}
+// Función para eliminar tarea
+function eliminarTarea(titulo: string): void {
+	const tasques = obtenerTareas();
+	const index = tasques.findIndex((t) => t.titulo === titulo);
 
 	if (index === -1) {
 		console.error("No se encontró ninguna tarea con el título:", titulo);
@@ -62,12 +67,11 @@ function eliminarTarea(titulo: string) {
 	}
 
 	const tareaEliminada = tasques.splice(index, 1)[0];
-
-	localStorage.setItem("tasques", JSON.stringify(tasques));
-
+	guardarTareas(tasques);
 	console.log("Tarea eliminada:", tareaEliminada);
 }
 
+// Función para actualizar tarea
 function actualizarTarea(
 	titulo: string,
 	nuevoTitulo?: string,
@@ -76,127 +80,352 @@ function actualizarTarea(
 	fecha?: Date,
 	prioridad?: number,
 	etiquetas?: string[],
-) {
-	const tasquesRaw = localStorage.getItem("tasques");
-	let tasques: Tarea[] = [];
-	if (tasquesRaw) {
-		tasques = JSON.parse(tasquesRaw) as Tarea[];
-	}
-
-	let index = -1;
-	for (let i = 0; i < tasques.length; i++) {
-		if (tasques[i].titulo === titulo) {
-			index = i;
-			break;
-		}
-	}
+): void {
+	const tasques = obtenerTareas();
+	const index = tasques.findIndex((t) => t.titulo === titulo);
 
 	if (index === -1) {
 		console.error("No se encontró ninguna tarea con el título:", titulo);
 		return;
 	}
 
-	if (nuevoTitulo !== undefined) {
-		tasques[index].titulo = nuevoTitulo;
-	}
-	if (descripcion !== undefined) {
-		tasques[index].descripcion = descripcion;
-	}
-	if (estado !== undefined) {
-		tasques[index].estado = estado;
-	}
-	if (fecha !== undefined) {
-		tasques[index].fecha = fecha;
-	}
-	if (prioridad !== undefined) {
-		tasques[index].prioridad = prioridad;
-	}
-	if (etiquetas !== undefined) {
-		tasques[index].etiquetas = etiquetas;
-	}
+	if (nuevoTitulo !== undefined) tasques[index].titulo = nuevoTitulo;
+	if (descripcion !== undefined) tasques[index].descripcion = descripcion;
+	if (estado !== undefined) tasques[index].estado = estado;
+	if (fecha !== undefined) tasques[index].fecha = fecha;
+	if (prioridad !== undefined) tasques[index].prioridad = prioridad;
+	if (etiquetas !== undefined) tasques[index].etiquetas = etiquetas;
 
-	localStorage.setItem("tasques", JSON.stringify(tasques));
-
+	guardarTareas(tasques);
 	console.log("Tarea actualizada:", tasques[index]);
 }
 
-// Agergar Tarea
-const btnCreateTask = document.querySelector(".btn-create-task");
-btnCreateTask?.addEventListener("click", () => {
-	console.log("Tarea Creada");
-	const name = (document.querySelector(".form-name") as HTMLInputElement).value;
-	const description = (
-		document.querySelector(".form-description") as HTMLInputElement
-	).value;
-	const tags = (document.querySelector(".form-tags") as HTMLInputElement).value;
-	const date = (document.querySelector(".form-date") as HTMLInputElement).value;
-<<<<<<< HEAD
-});
-
-=======
-});
-
-const divBtns = document.querySelector(".div-btns");
-divBtns?.addEventListener("click", (e) => {
-	if (e.target && e.target.tagName === "BUTTON") {
-		const btn = e.target as HTMLButtonElement;
-		const text = btn.textContent;
-		alert(text.trim());
+// Función para obtener el color del estado
+function obtenerColorEstado(estado: number): string {
+	switch (estado) {
+		case 1:
+			return "bg-warning"; // Pendiente - amarillo
+		case 2:
+			return "bg-blue-400"; // En progreso - azul
+		case 3:
+			return "bg-success"; // Completado - verde
+		default:
+			return "bg-gray-400";
 	}
-});
+}
 
-/*
-document.addEventListener("DOMContentLoaded", () => {
-  const chkDashboard = document.getElementById("chkDashboard");
-  const chkTodas = document.getElementById("chkTodas");
-  const mainContent = document.getElementById("mainContent");
+// Función para obtener el texto del estado
+function obtenerTextoEstado(estado: number): string {
+	switch (estado) {
+		case 1:
+			return "Pendiente";
+		case 2:
+			return "En progreso";
+		case 3:
+			return "Completado";
+		default:
+			return "Desconocido";
+	}
+}
 
-  // Guardamos el HTML original del dashboard
-  const dashboardHTML = mainContent.innerHTML;
+// Función para obtener el texto de prioridad
+function obtenerTextoPrioridad(prioridad: number): string {
+	switch (prioridad) {
+		case 3:
+			return "Alta";
+		case 2:
+			return "Media";
+		case 1:
+			return "Baja";
+		default:
+			return "Media";
+	}
+}
 
-  chkDashboard.checked = true;
+// Función para obtener el color de prioridad
+function obtenerColorPrioridad(prioridad: number): string {
+	switch (prioridad) {
+		case 3:
+			return "#ff6b6b"; // Rojo para alta
+		case 2:
+			return "#ffa500"; // Naranja para media
+		case 1:
+			return "#32d18a"; // Verde para baja
+		default:
+			return "#6d5dfb";
+	}
+}
 
-  chkDashboard.addEventListener("change", () => {
-    if (chkDashboard.checked) {
-      chkTodas.checked = false;
-      mainContent.innerHTML = dashboardHTML;
-    }
-  });
+// Función para renderizar una tarea
+function renderizarTarea(tarea: Tarea): string {
+	const colorEstado = obtenerColorEstado(tarea.estado);
+	const textoEstado = obtenerTextoEstado(tarea.estado);
+	const textoPrioridad = obtenerTextoPrioridad(tarea.prioridad);
+	const colorPrioridad = obtenerColorPrioridad(tarea.prioridad);
 
-  chkTodas.addEventListener("change", () => {
-    if (chkTodas.checked) {
-      chkDashboard.checked = false;
+	const etiquetasHTML = tarea.etiquetas
+		.map(
+			(etiqueta) => `
+		<div class="flex items-center gap-1.5">
+			<i class="fas fa-tag text-[#6d5dfb] text-base"></i>
+			<span class="text-neutral-dark text-xs font-normal">${etiqueta}</span>
+		</div>
+	`,
+		)
+		.join("");
 
-      fetch("./pages/todasLasTareas.html")
-        .then((res) => res.text())
-        .then((html) => {
-          mainContent.innerHTML = html;
-        })
-        .catch((err) => {
-          mainContent.innerHTML =
-            "<p class='text-red-500'>Error cargando las tareas</p>";
-          console.error(err);
-        });
-    }
-  });
-});
-*/
->>>>>>> 4d4b20f (update)
-function tancarSesio() {
+	return `
+		<article class="border-2 border-primary-dark rounded p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
+			<div class="flex flex-col gap-2 flex-1">
+				<h3 class="text-primary-dark text-lg font-bold leading-tight">${tarea.titulo}</h3>
+				<p class="text-primary-dark text-sm font-normal leading-tight">${tarea.descripcion || "Sin descripción"}</p>
+				<div class="flex gap-2 items-center flex-wrap">
+					<div class="flex items-center gap-1.5">
+						<i class="fas fa-tag text-[#1f1f29] text-base"></i>
+						<span class="text-neutral-dark text-xs font-normal">${tarea.categoria}</span>
+					</div>
+					<div class="flex items-center gap-1.5">
+						<i class="fas fa-tag text-base" style="color: ${colorPrioridad}"></i>
+						<span class="text-neutral-dark text-xs font-normal">Prioridad: ${textoPrioridad}</span>
+					</div>
+					${etiquetasHTML}
+				</div>
+			</div>
+			<span class="${colorEstado} px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
+				${textoEstado}
+			</span>
+		</article>
+	`;
+}
+
+// Función para actualizar estadísticas
+function actualizarEstadisticas(): void {
+	const tasques = obtenerTareas();
+	const totalTareas = tasques.length;
+	const tareasCompletadas = tasques.filter((t) => t.estado === 3).length;
+	const tareasEnProgreso = tasques.filter((t) => t.estado === 2).length;
+
+	// Actualizar estadísticas en el sidebar
+	const statsElements = document.querySelectorAll(
+		".bg-neutral-light.rounded.p-4",
+	);
+	if (statsElements.length >= 2) {
+		const totalElement = statsElements[0].querySelector(
+			".text-primary-dark.text-base.font-normal:last-child",
+		);
+		const completadasElement = statsElements[1].querySelector(
+			".text-primary-dark.text-base.font-normal:last-child",
+		);
+
+		if (totalElement) totalElement.textContent = totalTareas.toString();
+		if (completadasElement)
+			completadasElement.textContent = tareasCompletadas.toString();
+	}
+
+	// Actualizar cards de estadísticas
+	const cards = document.querySelectorAll(".grid.grid-cols-3 .bg-gray-200");
+	if (cards.length >= 3) {
+		const totalCard = cards[0].querySelector(
+			".text-primary-dark.text-\\[32px\\].font-bold",
+		);
+		const progresoCard = cards[1].querySelector(
+			".text-primary-dark.text-\\[32px\\].font-bold",
+		);
+		const completadasCard = cards[2].querySelector(
+			".text-primary-dark.text-\\[32px\\].font-bold",
+		);
+
+		if (totalCard) totalCard.textContent = totalTareas.toString();
+		if (progresoCard) progresoCard.textContent = tareasEnProgreso.toString();
+		if (completadasCard)
+			completadasCard.textContent = tareasCompletadas.toString();
+	}
+}
+
+// Función para renderizar todas las tareas
+function renderizarTareas(): void {
+	const tasques = obtenerTareas();
+	const tareasRecientesSection = document.querySelector(
+		"section.flex-1.bg-white.flex.flex-col.gap-3.overflow-auto",
+	);
+
+	if (!tareasRecientesSection) return;
+
+	// Mantener el header
+	const header = tareasRecientesSection.querySelector(
+		".border-b-2.border-primary-dark",
+	);
+
+	// Limpiar tareas existentes
+	tareasRecientesSection.innerHTML = "";
+
+	// Volver a agregar el header
+	if (header) {
+		tareasRecientesSection.appendChild(header);
+	}
+
+	// Renderizar tareas (mostrar las últimas 5)
+	const tareasRecientes = tasques.slice(-5).reverse();
+
+	if (tareasRecientes.length === 0) {
+		const mensajeVacio = document.createElement("div");
+		mensajeVacio.className = "text-center p-8 text-gray-500";
+		mensajeVacio.textContent = "No hay tareas aún. ¡Crea tu primera tarea!";
+		tareasRecientesSection.appendChild(mensajeVacio);
+	} else {
+		tareasRecientes.forEach((tarea) => {
+			const tareaElement = document.createElement("div");
+			tareaElement.innerHTML = renderizarTarea(tarea);
+			tareasRecientesSection.appendChild(tareaElement.firstElementChild!);
+		});
+	}
+
+	// Actualizar estadísticas
+	actualizarEstadisticas();
+}
+
+// Función para cerrar sesión
+function tancarSesio(): void {
 	localStorage.removeItem("usuariActual");
 	window.location.href = "./pages/login.html";
 }
 
+// Inicialización cuando el DOM está listo
 document.addEventListener("DOMContentLoaded", () => {
 	const usuariActual = localStorage.getItem("usuariActual");
 
-	if (!usuariActual) {
+	// Verificar si estamos en la página principal o en crear tarea
+	const isMainPage =
+		window.location.pathname.endsWith("index.html") ||
+		window.location.pathname === "/";
+	const isCreatePage = window.location.pathname.includes("crearTarea.html");
+
+	if (!usuariActual && !isCreatePage) {
 		window.location.href = "./pages/login.html";
+		return;
 	}
 
-	const tasques = (
-		JSON.parse(localStorage.getItem("tasques") || "[]") as Tarea[]
-	).map((t) => ({ ...t, fecha: t.fecha ? new Date(t.fecha) : undefined }));
+	// Si estamos en la página principal, renderizar tareas
+	if (isMainPage) {
+		renderizarTareas();
+	}
 
-	console.log(tasques);
+	// Configurar el formulario de crear tarea
+	if (isCreatePage) {
+		let categoriaSeleccionada = "";
+		let prioridadSeleccionada = 2; // Media por defecto
+
+		// Manejar selección de categoría
+		const divBtnsCategoria = document.querySelector(".div-btns");
+		if (divBtnsCategoria) {
+			divBtnsCategoria.addEventListener("click", (e) => {
+				const target = e.target as HTMLElement;
+				if (
+					target.tagName === "BUTTON" &&
+					!target.textContent?.includes("Añadir")
+				) {
+					// Remover selección previa
+					divBtnsCategoria.querySelectorAll("button").forEach((btn) => {
+						btn.classList.remove("bg-primary", "text-white");
+						btn.classList.add("bg-neutral-light", "text-primary-dark");
+					});
+
+					// Marcar como seleccionado
+					target.classList.remove("bg-neutral-light", "text-primary-dark");
+					target.classList.add("bg-primary", "text-white");
+					categoriaSeleccionada = target.textContent?.trim() || "";
+				}
+			});
+		}
+
+		// Manejar selección de prioridad
+		const divBtnsPrioridad = document.querySelectorAll(".grid.grid-cols-3")[0];
+		if (divBtnsPrioridad) {
+			divBtnsPrioridad.addEventListener("click", (e) => {
+				const target = e.target as HTMLElement;
+				if (target.tagName === "BUTTON") {
+					// Remover selección previa
+					divBtnsPrioridad.querySelectorAll("button").forEach((btn) => {
+						btn.classList.remove("bg-primary", "text-white");
+						btn.classList.add("bg-neutral-light", "text-primary-dark");
+					});
+
+					// Marcar como seleccionado
+					target.classList.remove("bg-neutral-light", "text-primary-dark");
+					target.classList.add("bg-primary", "text-white");
+
+					const textoPrioridad = target.textContent?.trim();
+					prioridadSeleccionada =
+						textoPrioridad === "Alta" ? 3 : textoPrioridad === "Media" ? 2 : 1;
+				}
+			});
+		}
+
+		// Manejar el botón de crear tarea
+		const btnCreateTask = document.querySelector(".btn-create-task");
+		if (btnCreateTask) {
+			btnCreateTask.addEventListener("click", (e) => {
+				e.preventDefault();
+
+				const nombre = (
+					document.querySelector(".form-name") as HTMLInputElement
+				)?.value.trim();
+				const descripcion = (
+					document.querySelector(".form-description") as HTMLTextAreaElement
+				)?.value.trim();
+				const tagsInput = (
+					document.querySelector(".form-tags") as HTMLInputElement
+				)?.value.trim();
+				const dateInput = (
+					document.querySelector(".form-date") as HTMLInputElement
+				)?.value.trim();
+
+				// Validaciones
+				if (!nombre) {
+					alert("Por favor, ingresa un nombre para la tarea");
+					return;
+				}
+
+				if (!categoriaSeleccionada) {
+					alert("Por favor, selecciona una categoría");
+					return;
+				}
+
+				// Procesar etiquetas
+				const etiquetas = tagsInput
+					? tagsInput
+							.split(",")
+							.map((tag) => tag.trim())
+							.filter((tag) => tag)
+					: [];
+
+				// Procesar fecha (opcional)
+				let fecha: Date | undefined = undefined;
+				if (dateInput) {
+					const [day, month, year] = dateInput.split("/");
+					if (day && month && year) {
+						fecha = new Date(
+							parseInt(year),
+							parseInt(month) - 1,
+							parseInt(day),
+						);
+					}
+				}
+
+				// Crear la tarea
+				crearTarea(
+					nombre,
+					descripcion,
+					categoriaSeleccionada,
+					1,
+					fecha,
+					prioridadSeleccionada,
+					etiquetas,
+				);
+
+				alert("¡Tarea creada exitosamente!");
+				window.location.href = "/";
+			});
+		}
+	}
 });
