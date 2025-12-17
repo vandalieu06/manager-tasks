@@ -119,7 +119,7 @@ function obtenerColorPrioridad(prioridad) {
             return "#6d5dfb";
     }
 }
-// Función para renderizar una tarea
+// Función para renderizar una tarea (dashboard)
 function renderizarTarea(tarea) {
     const colorEstado = obtenerColorEstado(tarea.estado);
     const textoEstado = obtenerTextoEstado(tarea.estado);
@@ -156,51 +156,103 @@ function renderizarTarea(tarea) {
 		</article>
 	`;
 }
+// Función para renderizar una tarea (página todas las tareas - más grande)
+function renderizarTareaGrande(tarea) {
+    const colorEstado = obtenerColorEstado(tarea.estado);
+    const textoEstado = obtenerTextoEstado(tarea.estado);
+    const textoPrioridad = obtenerTextoPrioridad(tarea.prioridad);
+    const colorPrioridad = obtenerColorPrioridad(tarea.prioridad);
+    const etiquetasHTML = tarea.etiquetas
+        .map((etiqueta) => `
+		<div class="flex items-center gap-1.5">
+			<i class="fas fa-tag text-[#6d5dfb] text-base"></i>
+			<span class="text-neutral-dark text-base font-normal">${etiqueta}</span>
+		</div>
+	`)
+        .join("");
+    return `
+		<article class="bg-neutral-light border-2 border-primary-dark rounded-lg p-4 flex items-start justify-between hover:bg-gray-50 transition-colors gap-4">
+			<div class="flex flex-col gap-2 flex-1">
+				<h3 class="text-primary-dark text-2xl font-bold leading-tight">${tarea.titulo}</h3>
+				<p class="text-primary-dark text-base font-normal leading-tight">${tarea.descripcion || "Sin descripción"}</p>
+				<div class="flex gap-2 items-center flex-wrap">
+					<div class="flex items-center gap-1.5">
+						<i class="fas fa-tag text-[#1f1f29] text-base"></i>
+						<span class="text-neutral-dark text-base font-normal">${tarea.categoria}</span>
+					</div>
+					<div class="flex items-center gap-1.5">
+						<i class="fas fa-tag text-base" style="color: ${colorPrioridad}"></i>
+						<span class="text-neutral-dark text-base font-normal">Prioridad: ${textoPrioridad}</span>
+					</div>
+					${etiquetasHTML}
+				</div>
+			</div>
+			<span class="${colorEstado} px-4 py-2 text-base font-semibold text-neutral-dark shrink-0">
+				${textoEstado}
+			</span>
+		</article>
+	`;
+}
 // Función para actualizar estadísticas
 function actualizarEstadisticas() {
     const tasques = obtenerTareas();
     const totalTareas = tasques.length;
     const tareasCompletadas = tasques.filter((t) => t.estado === 3).length;
     const tareasEnProgreso = tasques.filter((t) => t.estado === 2).length;
-    // Actualizar estadísticas en el sidebar
-    const statsElements = document.querySelectorAll(".bg-neutral-light.rounded.p-4");
-    if (statsElements.length >= 2) {
-        const totalElement = statsElements[0].querySelector(".text-primary-dark.text-base.font-normal:last-child");
-        const completadasElement = statsElements[1].querySelector(".text-primary-dark.text-base.font-normal:last-child");
-        if (totalElement)
-            totalElement.textContent = totalTareas.toString();
-        if (completadasElement)
-            completadasElement.textContent = tareasCompletadas.toString();
+    // Actualizar estadísticas en el sidebar (dentro del aside)
+    const aside = document.querySelector("aside");
+    if (aside) {
+        const statsContainers = aside.querySelectorAll(".bg-neutral-light.rounded.p-4");
+        // El primer contenedor es "Tareas totales"
+        if (statsContainers[0]) {
+            const totalElement = statsContainers[0].querySelector("p:last-child");
+            if (totalElement)
+                totalElement.textContent = totalTareas.toString();
+        }
+        // El segundo contenedor es "Completadas"
+        if (statsContainers[1]) {
+            const completadasElement = statsContainers[1].querySelector("p:last-child");
+            if (completadasElement)
+                completadasElement.textContent = tareasCompletadas.toString();
+        }
     }
-    // Actualizar cards de estadísticas
-    const cards = document.querySelectorAll(".grid.grid-cols-3 .bg-gray-200");
-    if (cards.length >= 3) {
-        const totalCard = cards[0].querySelector(".text-primary-dark.text-\\[32px\\].font-bold");
-        const progresoCard = cards[1].querySelector(".text-primary-dark.text-\\[32px\\].font-bold");
-        const completadasCard = cards[2].querySelector(".text-primary-dark.text-\\[32px\\].font-bold");
-        if (totalCard)
-            totalCard.textContent = totalTareas.toString();
-        if (progresoCard)
-            progresoCard.textContent = tareasEnProgreso.toString();
-        if (completadasCard)
-            completadasCard.textContent = tareasCompletadas.toString();
+    // Actualizar cards de estadísticas en el main
+    const main = document.querySelector("main");
+    if (main) {
+        const cards = main.querySelectorAll(".grid.grid-cols-3 > div");
+        if (cards.length >= 3) {
+            const totalCard = cards[0].querySelector("p.text-\\[32px\\]");
+            if (totalCard)
+                totalCard.textContent = totalTareas.toString();
+            const progresoCard = cards[1].querySelector("p.text-\\[32px\\]");
+            if (progresoCard)
+                progresoCard.textContent = tareasEnProgreso.toString();
+            const completadasCard = cards[2].querySelector("p.text-\\[32px\\]");
+            if (completadasCard)
+                completadasCard.textContent = tareasCompletadas.toString();
+        }
     }
 }
-// Función para renderizar todas las tareas
+// Función para contar tareas por categoría
+function contarPorCategoria() {
+    const tasques = obtenerTareas();
+    const conteo = {};
+    tasques.forEach((tarea) => {
+        conteo[tarea.categoria] = (conteo[tarea.categoria] || 0) + 1;
+    });
+    return conteo;
+}
+// Función para renderizar todas las tareas (dashboard)
 function renderizarTareas() {
     const tasques = obtenerTareas();
     const tareasRecientesSection = document.querySelector("section.flex-1.bg-white.flex.flex-col.gap-3.overflow-auto");
     if (!tareasRecientesSection)
         return;
-    // Mantener el header
     const header = tareasRecientesSection.querySelector(".border-b-2.border-primary-dark");
-    // Limpiar tareas existentes
     tareasRecientesSection.innerHTML = "";
-    // Volver a agregar el header
     if (header) {
         tareasRecientesSection.appendChild(header);
     }
-    // Renderizar tareas (mostrar las últimas 5)
     const tareasRecientes = tasques.slice(-5).reverse();
     if (tareasRecientes.length === 0) {
         const mensajeVacio = document.createElement("div");
@@ -215,8 +267,70 @@ function renderizarTareas() {
             tareasRecientesSection.appendChild(tareaElement.firstElementChild);
         });
     }
-    // Actualizar estadísticas
     actualizarEstadisticas();
+}
+// Función para renderizar todas las tareas con filtros
+function renderizarTodasLasTareas(filtros = {}) {
+    let tasques = obtenerTareas();
+    console.log("Tareas totales:", tasques.length);
+    console.log("Filtros aplicados:", filtros);
+    // Aplicar filtros
+    if (filtros.busqueda) {
+        const busqueda = filtros.busqueda.toLowerCase();
+        tasques = tasques.filter((t) => t.titulo.toLowerCase().includes(busqueda) ||
+            (t.descripcion && t.descripcion.toLowerCase().includes(busqueda)));
+    }
+    if (filtros.categoria) {
+        console.log("Filtrando por categoría:", filtros.categoria);
+        console.log("Categorías de tareas antes del filtro:", tasques.map((t) => t.categoria));
+        tasques = tasques.filter((t) => {
+            console.log(`Comparando: "${t.categoria}" === "${filtros.categoria}"`, t.categoria === filtros.categoria);
+            return t.categoria === filtros.categoria;
+        });
+        console.log("Tareas después del filtro de categoría:", tasques.length);
+    }
+    if (filtros.prioridad) {
+        tasques = tasques.filter((t) => t.prioridad === filtros.prioridad);
+    }
+    if (filtros.estado) {
+        tasques = tasques.filter((t) => t.estado === filtros.estado);
+    }
+    console.log("Tareas finales a renderizar:", tasques.length);
+    // Obtener el contenedor de tareas
+    const listaTareas = document.querySelector("main .flex-1.flex.flex-col.gap-\\[17px\\].overflow-y-auto");
+    if (!listaTareas)
+        return;
+    // Limpiar tareas existentes
+    listaTareas.innerHTML = "";
+    // Renderizar tareas filtradas
+    if (tasques.length === 0) {
+        const mensajeVacio = document.createElement("div");
+        mensajeVacio.className = "text-center p-8 text-gray-500 text-xl";
+        mensajeVacio.textContent = "No se encontraron tareas con estos filtros.";
+        listaTareas.appendChild(mensajeVacio);
+    }
+    else {
+        tasques.forEach((tarea) => {
+            const tareaElement = document.createElement("div");
+            tareaElement.innerHTML = renderizarTareaGrande(tarea);
+            listaTareas.appendChild(tareaElement.firstElementChild);
+        });
+    }
+}
+// Función para actualizar contadores de categorías
+function actualizarContadoresCategorias() {
+    const conteo = contarPorCategoria();
+    const categorias = ["Frontend", "Backend", "Database"];
+    const categoriasElements = document.querySelectorAll("aside:nth-child(2) .flex.flex-col.gap-4:first-child .bg-neutral-light");
+    categoriasElements.forEach((el, index) => {
+        if (index < categorias.length) {
+            const contador = el.querySelector("span:last-child");
+            if (contador) {
+                const categoria = categorias[index];
+                contador.textContent = (conteo[categoria] || 0).toString();
+            }
+        }
+    });
 }
 // Función para cerrar sesión
 function tancarSesio() {
@@ -226,23 +340,179 @@ function tancarSesio() {
 // Inicialización cuando el DOM está listo
 document.addEventListener("DOMContentLoaded", () => {
     const usuariActual = localStorage.getItem("usuariActual");
-    // Verificar si estamos en la página principal o en crear tarea
     const isMainPage = window.location.pathname.endsWith("index.html") ||
         window.location.pathname === "/";
     const isCreatePage = window.location.pathname.includes("crearTarea.html");
+    const isAllTasksPage = window.location.pathname.includes("todasLasTareas.html");
     if (!usuariActual && !isCreatePage) {
         window.location.href = "./pages/login.html";
         return;
     }
-    // Si estamos en la página principal, renderizar tareas
+    // Página principal (Dashboard)
     if (isMainPage) {
         renderizarTareas();
     }
+    // Página de todas las tareas
+    if (isAllTasksPage) {
+        const filtrosActuales = {};
+        // Renderizar todas las tareas inicialmente
+        renderizarTodasLasTareas();
+        actualizarContadoresCategorias();
+        // Búsqueda
+        const barraBusqueda = document.querySelector("main .flex.gap-6 .flex-1");
+        if (barraBusqueda) {
+            let inputBusqueda = barraBusqueda.querySelector("input");
+            if (!inputBusqueda) {
+                // Crear input si no existe
+                barraBusqueda.innerHTML = `
+					<i class="fas fa-search text-primary-dark text-2xl"></i>
+					<input type="text" placeholder="Buscar" class="flex-1 bg-transparent text-primary-dark text-2xl font-extrabold outline-none" />
+				`;
+                inputBusqueda = barraBusqueda.querySelector("input");
+            }
+            inputBusqueda === null || inputBusqueda === void 0 ? void 0 : inputBusqueda.addEventListener("input", (e) => {
+                const target = e.target;
+                filtrosActuales.busqueda = target.value;
+                renderizarTodasLasTareas(filtrosActuales);
+            });
+        }
+        // Filtros de categoría
+        const categoriasBtns = document.querySelectorAll("aside:nth-child(2) .flex.flex-col.gap-4:first-child .bg-neutral-light");
+        categoriasBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                var _a;
+                // Obtener solo el texto del primer span (nombre de la categoría)
+                const spanCategoria = btn.querySelector("span:first-child");
+                const categoria = (_a = spanCategoria === null || spanCategoria === void 0 ? void 0 : spanCategoria.textContent) === null || _a === void 0 ? void 0 : _a.trim();
+                // Toggle categoria
+                if (filtrosActuales.categoria === categoria) {
+                    delete filtrosActuales.categoria;
+                    btn.classList.remove("bg-primary", "text-white");
+                    btn.querySelectorAll("span").forEach((s) => {
+                        s.classList.remove("text-white");
+                        s.classList.add("text-neutral-dark");
+                    });
+                }
+                else {
+                    // Limpiar selección previa
+                    categoriasBtns.forEach((b) => {
+                        b.classList.remove("bg-primary", "text-white");
+                        b.querySelectorAll("span").forEach((s) => {
+                            s.classList.remove("text-white");
+                            s.classList.add("text-neutral-dark");
+                        });
+                    });
+                    filtrosActuales.categoria = categoria;
+                    btn.classList.add("bg-primary", "text-white");
+                    btn.querySelectorAll("span").forEach((s) => {
+                        s.classList.remove("text-neutral-dark");
+                        s.classList.add("text-white");
+                    });
+                }
+                console.log("Filtro categoría aplicado:", categoria);
+                renderizarTodasLasTareas(filtrosActuales);
+            });
+        });
+        // Filtros de prioridad
+        const prioridadBtns = document.querySelectorAll("aside:nth-child(2) .flex.flex-col.gap-4:nth-child(2) .bg-neutral-light");
+        prioridadBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                var _a, _b, _c, _d, _e;
+                const prioridadTexto = (_a = btn.textContent) === null || _a === void 0 ? void 0 : _a.trim();
+                const prioridad = prioridadTexto === "Alta" ? 3 : prioridadTexto === "Media" ? 2 : 1;
+                // Toggle prioridad
+                if (filtrosActuales.prioridad === prioridad) {
+                    delete filtrosActuales.prioridad;
+                    btn.classList.remove("bg-primary", "text-white");
+                    (_b = btn.querySelector("span")) === null || _b === void 0 ? void 0 : _b.classList.remove("text-white");
+                    (_c = btn.querySelector("span")) === null || _c === void 0 ? void 0 : _c.classList.add("text-neutral-dark");
+                }
+                else {
+                    // Limpiar selección previa
+                    prioridadBtns.forEach((b) => {
+                        var _a, _b;
+                        b.classList.remove("bg-primary", "text-white");
+                        (_a = b.querySelector("span")) === null || _a === void 0 ? void 0 : _a.classList.remove("text-white");
+                        (_b = b.querySelector("span")) === null || _b === void 0 ? void 0 : _b.classList.add("text-neutral-dark");
+                    });
+                    filtrosActuales.prioridad = prioridad;
+                    btn.classList.add("bg-primary", "text-white");
+                    (_d = btn.querySelector("span")) === null || _d === void 0 ? void 0 : _d.classList.remove("text-neutral-dark");
+                    (_e = btn.querySelector("span")) === null || _e === void 0 ? void 0 : _e.classList.add("text-white");
+                }
+                renderizarTodasLasTareas(filtrosActuales);
+            });
+        });
+        // Filtros de estado
+        const estadoBtns = document.querySelectorAll("aside:nth-child(2) .flex.flex-col.gap-4:nth-child(3) .bg-neutral-light");
+        estadoBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                var _a, _b, _c, _d, _e;
+                const estadoTexto = (_a = btn.textContent) === null || _a === void 0 ? void 0 : _a.trim();
+                const estado = estadoTexto === "Pendiente"
+                    ? 1
+                    : estadoTexto === "En progreso"
+                        ? 2
+                        : 3;
+                // Toggle estado
+                if (filtrosActuales.estado === estado) {
+                    delete filtrosActuales.estado;
+                    btn.classList.remove("bg-primary", "text-white");
+                    (_b = btn.querySelector("span")) === null || _b === void 0 ? void 0 : _b.classList.remove("text-white");
+                    (_c = btn.querySelector("span")) === null || _c === void 0 ? void 0 : _c.classList.add("text-neutral-dark");
+                }
+                else {
+                    // Limpiar selección previa
+                    estadoBtns.forEach((b) => {
+                        var _a, _b;
+                        b.classList.remove("bg-primary", "text-white");
+                        (_a = b.querySelector("span")) === null || _a === void 0 ? void 0 : _a.classList.remove("text-white");
+                        (_b = b.querySelector("span")) === null || _b === void 0 ? void 0 : _b.classList.add("text-neutral-dark");
+                    });
+                    filtrosActuales.estado = estado;
+                    btn.classList.add("bg-primary", "text-white");
+                    (_d = btn.querySelector("span")) === null || _d === void 0 ? void 0 : _d.classList.remove("text-neutral-dark");
+                    (_e = btn.querySelector("span")) === null || _e === void 0 ? void 0 : _e.classList.add("text-white");
+                }
+                renderizarTodasLasTareas(filtrosActuales);
+            });
+        });
+        // Botón limpiar filtros
+        const btnLimpiar = document.querySelector("aside:nth-child(2) button");
+        btnLimpiar === null || btnLimpiar === void 0 ? void 0 : btnLimpiar.addEventListener("click", () => {
+            // Limpiar filtros
+            filtrosActuales.busqueda = undefined;
+            filtrosActuales.categoria = undefined;
+            filtrosActuales.prioridad = undefined;
+            filtrosActuales.estado = undefined;
+            // Limpiar input de búsqueda
+            const input = document.querySelector("main .flex.gap-6 input");
+            if (input)
+                input.value = "";
+            // Limpiar selecciones visuales
+            document
+                .querySelectorAll("aside:nth-child(2) .bg-neutral-light")
+                .forEach((btn) => {
+                btn.classList.remove("bg-primary", "text-white");
+                btn.querySelectorAll("span").forEach((s) => {
+                    s.classList.remove("text-white");
+                    s.classList.add("text-neutral-dark");
+                });
+            });
+            renderizarTodasLasTareas(filtrosActuales);
+        });
+        // Botón crear nueva tarea
+        const btnCrear = document.querySelector("main .flex.gap-6 button");
+        btnCrear === null || btnCrear === void 0 ? void 0 : btnCrear.addEventListener("click", () => {
+            window.location.href = "./crearTarea.html";
+        });
+    }
+    // Actualizar estadísticas en cualquier página
+    actualizarEstadisticas();
     // Configurar el formulario de crear tarea
     if (isCreatePage) {
         let categoriaSeleccionada = "";
-        let prioridadSeleccionada = 2; // Media por defecto
-        // Manejar selección de categoría
+        let prioridadSeleccionada = 2;
         const divBtnsCategoria = document.querySelector(".div-btns");
         if (divBtnsCategoria) {
             divBtnsCategoria.addEventListener("click", (e) => {
@@ -250,31 +520,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 const target = e.target;
                 if (target.tagName === "BUTTON" &&
                     !((_a = target.textContent) === null || _a === void 0 ? void 0 : _a.includes("Añadir"))) {
-                    // Remover selección previa
                     divBtnsCategoria.querySelectorAll("button").forEach((btn) => {
                         btn.classList.remove("bg-primary", "text-white");
                         btn.classList.add("bg-neutral-light", "text-primary-dark");
                     });
-                    // Marcar como seleccionado
                     target.classList.remove("bg-neutral-light", "text-primary-dark");
                     target.classList.add("bg-primary", "text-white");
                     categoriaSeleccionada = ((_b = target.textContent) === null || _b === void 0 ? void 0 : _b.trim()) || "";
                 }
             });
         }
-        // Manejar selección de prioridad
         const divBtnsPrioridad = document.querySelectorAll(".grid.grid-cols-3")[0];
         if (divBtnsPrioridad) {
             divBtnsPrioridad.addEventListener("click", (e) => {
                 var _a;
                 const target = e.target;
                 if (target.tagName === "BUTTON") {
-                    // Remover selección previa
                     divBtnsPrioridad.querySelectorAll("button").forEach((btn) => {
                         btn.classList.remove("bg-primary", "text-white");
                         btn.classList.add("bg-neutral-light", "text-primary-dark");
                     });
-                    // Marcar como seleccionado
                     target.classList.remove("bg-neutral-light", "text-primary-dark");
                     target.classList.add("bg-primary", "text-white");
                     const textoPrioridad = (_a = target.textContent) === null || _a === void 0 ? void 0 : _a.trim();
@@ -283,7 +548,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }
-        // Manejar el botón de crear tarea
         const btnCreateTask = document.querySelector(".btn-create-task");
         if (btnCreateTask) {
             btnCreateTask.addEventListener("click", (e) => {
@@ -293,7 +557,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const descripcion = (_b = document.querySelector(".form-description")) === null || _b === void 0 ? void 0 : _b.value.trim();
                 const tagsInput = (_c = document.querySelector(".form-tags")) === null || _c === void 0 ? void 0 : _c.value.trim();
                 const dateInput = (_d = document.querySelector(".form-date")) === null || _d === void 0 ? void 0 : _d.value.trim();
-                // Validaciones
                 if (!nombre) {
                     alert("Por favor, ingresa un nombre para la tarea");
                     return;
@@ -302,14 +565,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert("Por favor, selecciona una categoría");
                     return;
                 }
-                // Procesar etiquetas
                 const etiquetas = tagsInput
                     ? tagsInput
                         .split(",")
                         .map((tag) => tag.trim())
                         .filter((tag) => tag)
                     : [];
-                // Procesar fecha (opcional)
                 let fecha = undefined;
                 if (dateInput) {
                     const [day, month, year] = dateInput.split("/");
@@ -317,7 +578,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         fecha = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
                     }
                 }
-                // Crear la tarea
                 crearTarea(nombre, descripcion, categoriaSeleccionada, 1, fecha, prioridadSeleccionada, etiquetas);
                 alert("¡Tarea creada exitosamente!");
                 window.location.href = "/";

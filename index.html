@@ -123,14 +123,14 @@
             <p class="text-neutral-dark text-base font-normal mb-2">
               Tareas totales
             </p>
-            <p class="text-primary-dark text-base font-normal">24</p>
+            <p class="text-primary-dark text-base font-normal">0</p>
           </div>
 
           <div class="bg-neutral-light rounded p-4">
             <p class="text-neutral-dark text-base font-normal mb-2">
               Completadas
             </p>
-            <p class="text-primary-dark text-base font-normal">12</p>
+            <p class="text-primary-dark text-base font-normal">0</p>
           </div>
         </div>
       </aside>
@@ -180,12 +180,12 @@
         </div>
 
         <!-- Botón Crear Tarea -->
-        <button
-          onclick="abrirModal()"
+        <a
+          href="./pages/crearTarea.html"
           class="bg-primary border-2 border-primary rounded-lg p-4 w-full text-white text-xl font-extrabold text-center hover:bg-primary-dark hover:border-primary-dark transition-colors"
         >
           Crear Tarea
-        </button>
+        </a>
 
         <!-- Tareas Recientes -->
         <section class="flex-1 bg-white flex flex-col gap-3 overflow-auto">
@@ -196,11 +196,12 @@
             <h2 class="text-primary-dark text-sm font-normal">
               Tareas recientes
             </h2>
-            <button
+            <a
+              href="./pages/todasLasTareas.html"
               class="bg-primary text-white px-3 py-1.5 rounded text-xs font-semibold hover:bg-primary-dark transition-colors"
             >
               Ver todas
-            </button>
+            </a>
           </div>
 
           <!-- Tarea 1 -->
