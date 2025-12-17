@@ -1,20 +1,24 @@
 "use strict";
-window.onload = function () {
+window.onload = () => {
     const usuariActual = localStorage.getItem("usuariActual");
-    // ❌ Aquí habría que comprobar sesión/token en la base de datos o API
     if (usuariActual) {
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
     }
+    console.log("hola mundo");
 };
 function crearUsuario() {
-    let nombre = document.getElementById("nombre").value;
-    let apellidos = document.getElementById("apellidos").value;
-    let email = document.getElementById("email").value;
-    let username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-    let error = document.getElementById("error");
-    let creado = document.getElementById("cuentaCreada");
-    let errors = [];
+    console.log("Crear Usuario");
+    const nombre = document.getElementById("nombre").value;
+    const apellidos = document.getElementById("apellidos")
+        .value;
+    const email = document.getElementById("email").value;
+    const username = document.getElementById("username")
+        .value;
+    const password = document.getElementById("password")
+        .value;
+    const error = document.getElementById("error");
+    const creado = document.getElementById("cuentaCreada");
+    const errors = [];
     if (!nombre)
         errors.push("El camp 'Nom' és obligatori.");
     if (!apellidos)
@@ -31,17 +35,20 @@ function crearUsuario() {
         errors.push("El camp 'Contrasenya' és obligatori.");
     else if (password.length < 6)
         errors.push("La contrasenya ha de tenir almenys 6 caràcters.");
-    // ❌ Aquí habría que obtener los usuarios de la base de datos en vez de localStorage
     const usuarisGuardats = JSON.parse(localStorage.getItem("usuarisRegistrats") || "[]");
-    const emailExisteix = usuarisGuardats.some(u => u.email === email);
-    const userExisteix = usuarisGuardats.some(u => u.username === username);
+    const emailExisteix = usuarisGuardats.some((u) => u.email === email);
+    const userExisteix = usuarisGuardats.some((u) => u.username === username);
     if (emailExisteix)
         errors.push("Ja existeix un compte amb aquest correu electrònic.");
     if (userExisteix)
         errors.push("Ja existeix un compte amb aquest nom d'usuari.");
     if (errors.length > 0) {
-        if (error)
+        if (error) {
             error.innerHTML = errors.join("<br>");
+            error.classList.remove("hidden");
+        }
+        if (creado)
+            creado.classList.add("hidden");
         return;
     }
     const nouUsuari = {
@@ -49,16 +56,18 @@ function crearUsuario() {
         apellidos,
         email,
         username,
-        password
+        password,
     };
-    // ❌ Aquí habría que insertar el nuevo usuario en la base de datos en vez de localStorage
     usuarisGuardats.push(nouUsuari);
     localStorage.setItem("usuarisRegistrats", JSON.stringify(usuarisGuardats));
     if (creado) {
         creado.innerHTML = `
-            Compte creada amb èxit!<br><br>
-            <button type="button" onclick="window.location.href='login.html'">
-                Iniciar Sessió
-            </button>`;
+		Compte creada amb èxit!`;
+        creado.classList.remove("hidden");
+        window.location.href = "../index.html";
     }
+    if (error)
+        error.classList.add("hidden");
 }
+const btnCreateUser = document.querySelector(".btn-create-user");
+btnCreateUser === null || btnCreateUser === void 0 ? void 0 : btnCreateUser.addEventListener("click", crearUsuario);

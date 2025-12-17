@@ -1,13 +1,13 @@
 {
-  "compilerOptions": {
-    "target": "ES6",            // JavaScript de salida ES6
-    "module": "ES6",            // Usa módulos ES6
-    "outDir": "./dist",         // Carpeta donde se generará el .js
-    "rootDir": "./TS",          // Carpeta donde están tus .ts
-    "strict": true,             // Activa todas las comprobaciones estrictas
-    "esModuleInterop": true,    // Para compatibilidad con import/export
-    "lib": ["DOM", "ES6"],      // Solo APIs de navegador y ES6
-    "types": []                 // Ignora tipos globales de Node/Babel
-  },
-  "include": ["TS/**/*"]        // Incluye todos los archivos .ts de TS/
+	"compilerOptions": {
+		"target": "ES6", // JavaScript de salida ES6
+		"module": "ES6", // Usa módulos ES6
+		"outDir": "./dist", // Carpeta donde se generará el .js
+		"rootDir": "./ts", // Carpeta donde están tus .ts
+		"strict": true, // Activa todas las comprobaciones estrictas
+		"esModuleInterop": true, // Para compatibilidad con import/export
+		"lib": ["DOM", "ES6"], // Solo APIs de navegador y ES6
+		"types": [] // Ignora tipos globales de Node/Babel
+	},
+	"include": ["ts/**/*"] // Incluye todos los archivos .ts de TS/
 }

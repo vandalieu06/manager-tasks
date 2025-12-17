@@ -1,31 +1,39 @@
 "use strict";
-window.onload = function () {
+window.onload = () => {
     const usuariActual = localStorage.getItem("usuariActual");
-    // ❌ Aquí habría que comprobar sesión/token en la base de datos o API
     if (usuariActual) {
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
     }
 };
 function validarUsuario() {
-    let user = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-    let error = document.getElementById("error");
-    // ❌ Aquí habría que obtener los usuarios de la base de datos en vez de localStorage
+    console.log("Click en login");
+    const user = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const error = document.getElementById("error");
+    // Limpieza previa
+    error === null || error === void 0 ? void 0 : error.classList.add("hidden");
+    error.innerHTML = "";
     const usuarisGuardats = JSON.parse(localStorage.getItem("usuarisRegistrats") || "[]");
     if (usuarisGuardats.length === 0) {
-        if (error)
+        if (error) {
             error.innerHTML = "No hi ha cap compte registrat.";
+            error.classList.remove("hidden");
+        }
         return;
     }
-    const usuariTrobat = usuarisGuardats.find(u => (u.username === user || u.email === user) && u.password === password);
-    // ❌ Aquí habría que validar usuario y contraseña consultando la base de datos
+    const usuariTrobat = usuarisGuardats.find((u) => (u.username === user || u.email === user) &&
+        u.password === password);
     if (usuariTrobat) {
-        // ❌ Aquí habría que generar token o sesión en base de datos/servidor
+        // Guardamos sesión
         localStorage.setItem("usuariActual", JSON.stringify(usuariTrobat));
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
     }
     else {
-        if (error)
+        if (error) {
             error.innerHTML = "Usuari o contrasenya incorrectes.";
+            error.classList.remove("hidden");
+        }
     }
 }
+const btnValidate = document.querySelector(".btn-validate");
+btnValidate === null || btnValidate === void 0 ? void 0 : btnValidate.addEventListener("click", validarUsuario);
