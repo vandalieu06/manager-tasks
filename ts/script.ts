@@ -191,9 +191,26 @@ function renderizarTarea(tarea: Tarea): string {
 					${etiquetasHTML}
 				</div>
 			</div>
-			<span class="${colorEstado} px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark shrink-0">
-				${textoEstado}
-			</span>
+			<div class="relative shrink-0">
+				<button class="btn-cambiar-estado ${colorEstado} px-3 py-1.5 rounded text-xs font-semibold text-neutral-dark cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-2" data-titulo="${tarea.titulo}">
+					${textoEstado}
+					<i class="fas fa-chevron-down text-xs"></i>
+				</button>
+				<div class="menu-estado hidden absolute top-full right-0 mt-1 bg-white border-2 border-primary-dark rounded shadow-lg z-10 min-w-[120px]">
+					<button class="w-full px-3 py-2 text-left text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2" data-estado="1" data-titulo="${tarea.titulo}">
+						<span class="w-3 h-3 rounded-full bg-warning"></span>
+						Pendiente
+					</button>
+					<button class="w-full px-3 py-2 text-left text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2" data-estado="2" data-titulo="${tarea.titulo}">
+						<span class="w-3 h-3 rounded-full bg-blue-400"></span>
+						En progreso
+					</button>
+					<button class="w-full px-3 py-2 text-left text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2" data-estado="3" data-titulo="${tarea.titulo}">
+						<span class="w-3 h-3 rounded-full bg-success"></span>
+						Completado
+					</button>
+				</div>
+			</div>
 		</article>
 	`;
 }
@@ -719,9 +736,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 				const etiquetas = tagsInput
 					? tagsInput
-							.split(",")
-							.map((tag) => tag.trim())
-							.filter((tag) => tag)
+						.split(",")
+						.map((tag) => tag.trim())
+						.filter((tag) => tag)
 					: [];
 
 				let fecha: Date | undefined = undefined;
